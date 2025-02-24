@@ -1,0 +1,24 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.2.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DsaJet.Api", "DsaJet.Api.csproj", "{7301DFF8-1CB3-B6E2-7386-CD7C7B7E9330}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7301DFF8-1CB3-B6E2-7386-CD7C7B7E9330}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7301DFF8-1CB3-B6E2-7386-CD7C7B7E9330}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7301DFF8-1CB3-B6E2-7386-CD7C7B7E9330}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7301DFF8-1CB3-B6E2-7386-CD7C7B7E9330}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D1F475CB-3D22-41ED-96DC-969B3A58E506}
+	EndGlobalSection
+EndGlobal
