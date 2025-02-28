@@ -3,6 +3,7 @@ using DsaJet.Api.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DsaJet.Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250226123330_Added-Seeding-Data")]
+    partial class AddedSeedingData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -41,20 +44,6 @@ namespace DsaJet.Api.Migrations
                     b.HasIndex("ProblemId");
 
                     b.ToTable("Prerequisites");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Prereq = "Sorting Algorithms",
-                            ProblemId = 2
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Prereq = "Arrays",
-                            ProblemId = 2
-                        });
                 });
 
             modelBuilder.Entity("DsaJet.Api.Entities.Problem", b =>
@@ -73,10 +62,6 @@ namespace DsaJet.Api.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
                     b.Property<string>("Tag")
                         .IsRequired()
                         .HasColumnType("longtext");
@@ -88,26 +73,6 @@ namespace DsaJet.Api.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Problems");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Description = "Given two integer numbers find there sum",
-                            Difficulty = "Easy",
-                            Name = "Find the sum of two numbers",
-                            Tag = "Math",
-                            VideoSolutionUrl = "https://example.com/sum"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Description = "Given an array of size n apply the binaru search algorithm on it",
-                            Difficulty = "Medium",
-                            Name = "Implement Binary Search",
-                            Tag = "Search",
-                            VideoSolutionUrl = "https://example.com/binary-search"
-                        });
                 });
 
             modelBuilder.Entity("DsaJet.Api.Entities.Solution", b =>
@@ -134,29 +99,6 @@ namespace DsaJet.Api.Migrations
                     b.HasIndex("ProblemId");
 
                     b.ToTable("Solutions");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Language = "Python",
-                            ProblemId = 1,
-                            SolutionCode = "def sum(a, b): return a + b"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Language = "C++",
-                            ProblemId = 1,
-                            SolutionCode = "int sum(int a, int b) { return a + b; }"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Language = "Java",
-                            ProblemId = 2,
-                            SolutionCode = "int binarySearch(int[] arr, int x) { /* code */ }"
-                        });
                 });
 
             modelBuilder.Entity("DsaJet.Api.Entities.Prerequisite", b =>

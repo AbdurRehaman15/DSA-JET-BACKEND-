@@ -127,3 +127,4 @@ D:\DSA Prep App\DsaJet.Api\obj\Debug\net8.0\refint\DsaJet.Api.dll
 D:\DSA Prep App\DsaJet.Api\obj\Debug\net8.0\DsaJet.Api.pdb
 D:\DSA Prep App\DsaJet.Api\obj\Debug\net8.0\DsaJet.Api.genruntimeconfig.cache
 D:\DSA Prep App\DsaJet.Api\obj\Debug\net8.0\ref\DsaJet.Api.dll
+D:\DSA Prep App\DsaJet.Api\obj\Debug\net8.0\DsaJet.Api.sourcelink.json

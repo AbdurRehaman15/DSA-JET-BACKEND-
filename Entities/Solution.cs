@@ -8,5 +8,5 @@ public class Solution
     public int ProblemId { get; set; }
     public required string Language { get; set; }
     public required string SolutionCode { get; set; }
-    public required Problem Problem { get; set; }
+    public Problem Problem { get; set; } = null!;
 }

@@ -3,6 +3,7 @@ using DsaJet.Api.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DsaJet.Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250227120106_Trying-to-Fixed-Seeding")]
+    partial class TryingtoFixedSeeding
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -73,10 +76,6 @@ namespace DsaJet.Api.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
                     b.Property<string>("Tag")
                         .IsRequired()
                         .HasColumnType("longtext");
@@ -93,18 +92,16 @@ namespace DsaJet.Api.Migrations
                         new
                         {
                             Id = 1,
-                            Description = "Given two integer numbers find there sum",
+                            Description = "Find the sum of two numbers",
                             Difficulty = "Easy",
-                            Name = "Find the sum of two numbers",
                             Tag = "Math",
                             VideoSolutionUrl = "https://example.com/sum"
                         },
                         new
                         {
                             Id = 2,
-                            Description = "Given an array of size n apply the binaru search algorithm on it",
+                            Description = "Implement Binary Search",
                             Difficulty = "Medium",
-                            Name = "Implement Binary Search",
                             Tag = "Search",
                             VideoSolutionUrl = "https://example.com/binary-search"
                         });
