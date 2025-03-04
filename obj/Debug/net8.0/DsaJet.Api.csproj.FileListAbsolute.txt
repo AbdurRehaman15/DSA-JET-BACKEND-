@@ -128,3 +128,12 @@ D:\DSA Prep App\DsaJet.Api\obj\Debug\net8.0\DsaJet.Api.pdb
 D:\DSA Prep App\DsaJet.Api\obj\Debug\net8.0\DsaJet.Api.genruntimeconfig.cache
 D:\DSA Prep App\DsaJet.Api\obj\Debug\net8.0\ref\DsaJet.Api.dll
 D:\DSA Prep App\DsaJet.Api\obj\Debug\net8.0\DsaJet.Api.sourcelink.json
+D:\DSA Prep App\DsaJet.Api\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+D:\DSA Prep App\DsaJet.Api\bin\Debug\net8.0\Microsoft.Bcl.Memory.dll
+D:\DSA Prep App\DsaJet.Api\bin\Debug\net8.0\Microsoft.IdentityModel.Abstractions.dll
+D:\DSA Prep App\DsaJet.Api\bin\Debug\net8.0\Microsoft.IdentityModel.JsonWebTokens.dll
+D:\DSA Prep App\DsaJet.Api\bin\Debug\net8.0\Microsoft.IdentityModel.Logging.dll
+D:\DSA Prep App\DsaJet.Api\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.dll
+D:\DSA Prep App\DsaJet.Api\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+D:\DSA Prep App\DsaJet.Api\bin\Debug\net8.0\Microsoft.IdentityModel.Tokens.dll
+D:\DSA Prep App\DsaJet.Api\bin\Debug\net8.0\System.IdentityModel.Tokens.Jwt.dll

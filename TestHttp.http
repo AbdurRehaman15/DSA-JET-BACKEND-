@@ -1,4 +1,29 @@
-http://localhost:5250/GetAllProblems
+http://localhost:5250/getAllProblems
 
 ###
-http://localhost:5250/GetProblemsByTag/Search
+http://localhost:5250/getProblemsByTag/Search
+
+###
+http://localhost:5250/getProblemByName/Implement Binary Search
+
+###
+POST http://localhost:5250/register
+Content-Type: application/json
+
+{
+  "Username": "johndoe 2",
+  "Email": "johndoe2@example.com",
+  "Password": "examplepasfgrfs"
+}
+
+###
+Get http://localhost:5250/getAllUsers
+
+###
+POST http://localhost:5250/login
+Content-Type: application/json
+
+{
+  "Username": "johndoe 2",
+  "Password": "examplepasfgrfs"
+}

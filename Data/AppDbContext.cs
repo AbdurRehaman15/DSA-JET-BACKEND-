@@ -11,6 +11,7 @@ public class AppDbContext : DbContext
     public DbSet<Problem> Problems { get; set; }
     public DbSet<Solution> Solutions { get; set; }
     public DbSet<Prerequisite> Prerequisites { get; set; }
+    public DbSet<User> Users { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
