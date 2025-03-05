@@ -24,6 +24,7 @@ POST http://localhost:5250/login
 Content-Type: application/json
 
 {
-  "Username": "johndoe 2",
-  "Password": "examplepasfgrfs"
+  "Username": "johndoe",
+  "Password": "examplepass"
 }
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJqb2huZG9lIiwianRpIjoiMjhiYWIzNzAtZTJiYS00OWM5LWJkMzMtNjIyYjg4NmU4Y2Q5IiwiZXhwIjoxNzQxMjAwMzQ4LCJpc3MiOiJZb3VySXNzdWVyIiwiYXVkIjoiWW91ckF1ZGllbmNlIn0.lkMAKbDt1AD70w9vFXqdVQ6gbuwtr92IIMS8aZ23FAI

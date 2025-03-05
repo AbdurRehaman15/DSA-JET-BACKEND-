@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Microsoft.AspNetCore.Authorization;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,6 +15,9 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseMySql(builder.Configuration.GetConnectionString("DefaultString"),
         ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultString"))
     ));
+
+var jwtSettings = builder.Configuration.GetSection("JwtSettings");
+var secretKey = Encoding.UTF8.GetBytes(jwtSettings["Secret"]);
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -32,14 +36,22 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 builder.Services.AddAuthorization();
 
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30); // Session timeout
+    options.Cookie.HttpOnly = true;  // Secure cookie access
+    options.Cookie.IsEssential = true;  // Always store session cookie
+});
+
 var app = builder.Build();
 
-
+app.UseSession();
 app.UseAuthentication();
 app.UseAuthorization();
 
 
-app.MapGet("/getAllProblems", async (AppDbContext db) =>
+app.MapGet("/getAllProblems", [Authorize] async (AppDbContext db) =>
 {
     var problems = await db.Problems
         .Include(p => p.Prerequisites)
@@ -55,18 +67,23 @@ app.MapGet("/getAllProblems", async (AppDbContext db) =>
     return Results.Ok(problems);
 });
 
-app.MapGet("/getProblemsByTag/{tag}", async (AppDbContext db, string tag) => {
-    var problems = await db.Problems.Where(p => p.Tag == tag).Include(s => s.Solutions).Include(pr => pr.Prerequisites).Select(d => new GetProblemsDto {
-          Name = d.Name,
-          Description = d.Description,
-          Difficulty = d.Difficulty,
-          Tag = d.Tag,
-    }).ToListAsync();
+app.MapGet("/getProblemsByTag/{tag}", [Authorize] async (AppDbContext db, string tag) => {
+    var problems = await db.Problems
+                   .Where(p => p.Tag == tag)
+                   .Include(s => s.Solutions)
+                   .Include(pr => pr.Prerequisites)
+                   .Select(d => new GetProblemsDto 
+                   {
+                       Name = d.Name,
+                       Description = d.Description,
+                       Difficulty = d.Difficulty,
+                       Tag = d.Tag,
+                   }).ToListAsync();
 
     return Results.Ok(problems);
 });
 
-app.MapGet("getProblemByName/{Name}", async (AppDbContext db, string Name) => {
+app.MapGet("getProblemByName/{Name}", [Authorize] async (AppDbContext db, string Name) => {
     
     var problem = await db.Problems.Where(p => p.Name == Name).Select(d => new GetProblemDto {
         Name = d.Name,
@@ -119,7 +136,7 @@ app.MapPost("/register", async (AppDbContext db, UserDto userDto) => {
 
 });
 
-app.MapPost("/login", async (LoginDto request, AppDbContext db, IConfiguration config) => {
+app.MapPost("/login", async (LoginDto request, AppDbContext db, IConfiguration config, HttpContext context) => {
     var user = await db.Users.FirstOrDefaultAsync(u => u.Username == request.Username);
 
     if(user == null){
@@ -130,9 +147,34 @@ app.MapPost("/login", async (LoginDto request, AppDbContext db, IConfiguration c
         return Results.Unauthorized();
     }
 
+    context.Session.SetString("UseID", user.Id.ToString());
+    context.Session.SetString("Username", user.Username);
+
     var token = JwtTokenHelper.GenerateToken(user.Username, config);
 
-    return Results.Ok(new {Token = token});
+    return Results.Ok(new { Message = "User logged in succesfully",Token = token});
 });
+
+
+
+app.MapGet("getUserProfile",  (HttpContext context) => {
+    var username = context.Session.GetString("Username");
+
+    if(string.IsNullOrEmpty(username)) 
+        return Results.Json(new { error = "Session expired or not logged in." }, statusCode: 401);
+
+     
+    return Results.Ok(new { Username = username, Message = "User is authenticated via session." });
+
+});
+
+
+app.MapPost("logout", async (HttpContext context) => {
+    context.Session.Clear();
+
+    return Results.Ok(new {Message = "User logged out succesfully"});
+});
+
+
 app.Run();
 
