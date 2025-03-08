@@ -51,7 +51,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 
-app.MapGet("/getAllProblems", [Authorize] async (AppDbContext db) =>
+app.MapGet("/getAllProblems", async (AppDbContext db) =>
 {
     var problems = await db.Problems
         .Include(p => p.Prerequisites)
@@ -67,7 +67,7 @@ app.MapGet("/getAllProblems", [Authorize] async (AppDbContext db) =>
     return Results.Ok(problems);
 });
 
-app.MapGet("/getProblemsByTag/{tag}", [Authorize] async (AppDbContext db, string tag) => {
+app.MapGet("/getProblemsByTag/{tag}", async (AppDbContext db, string tag) => {
     var problems = await db.Problems
                    .Where(p => p.Tag == tag)
                    .Include(s => s.Solutions)
@@ -83,7 +83,7 @@ app.MapGet("/getProblemsByTag/{tag}", [Authorize] async (AppDbContext db, string
     return Results.Ok(problems);
 });
 
-app.MapGet("getProblemByName/{Name}", [Authorize] async (AppDbContext db, string Name) => {
+app.MapGet("getProblemByName/{Name}", async (AppDbContext db, string Name) => {
     
     var problem = await db.Problems.Where(p => p.Name == Name).Select(d => new GetProblemDto {
         Name = d.Name,
@@ -99,6 +99,17 @@ app.MapGet("getProblemByName/{Name}", [Authorize] async (AppDbContext db, string
  
 });
 
+app.MapGet("/getProblemSolution/{Name}/{Language}", async (AppDbContext db, string Name, string Language) => {
+    var solution = await db.Solutions.Where(s => s.Problem_Name == Name && s.Language == Language).Select(s => s.SolutionCode).FirstOrDefaultAsync();;
+
+    if(solution == null){
+        return Results.NotFound();
+    }
+
+    return Results.Ok(new {Solution = solution});
+});
+
+
 app.MapGet("/users/{id}", async (AppDbContext db, int id) =>
 {
     var user = await db.Users.FindAsync(id);
@@ -109,13 +120,12 @@ app.MapGet("getAllUsers", async (AppDbContext db) => {
     var users = await db.Users.Select(u => new UserDto {
         Username = u.Username,
         Email = u.Email,
-        Password = u.PasswordHash
     }).ToListAsync();
 
     return Results.Ok(users);
 });
 
-app.MapPost("/register", async (AppDbContext db, UserDto userDto) => {
+app.MapPost("/register", async (AppDbContext db, UserRegisterDto userDto) => {
     if(await db.Users.AnyAsync(u => u.Email == userDto.Email)){
         return Results.BadRequest("Email Already Registered");
     }

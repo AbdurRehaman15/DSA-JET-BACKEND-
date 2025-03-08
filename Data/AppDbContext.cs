@@ -15,8 +15,21 @@ public class AppDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Problem>().HasMany(p => p.Solutions).WithOne(s => s.Problem).HasForeignKey(s => s.ProblemId).OnDelete(DeleteBehavior.Cascade);
-        modelBuilder.Entity<Problem>().HasMany(p => p.Prerequisites).WithOne(pr => pr.Problem).HasForeignKey(pr => pr.ProblemId).OnDelete(DeleteBehavior.Cascade);
+          modelBuilder.Entity<Problem>()
+            .HasIndex(p => p.Name)
+            .IsUnique();
+        
+         modelBuilder.Entity<Solution>()
+            .HasOne(s => s.Problem)
+            .WithMany(p => p.Solutions)
+            .HasForeignKey(s => s.Problem_Name)  
+            .HasPrincipalKey(p => p.Name);  
+        
+        modelBuilder.Entity<Problem>()
+            .HasMany(p => p.Prerequisites)
+            .WithOne(pr => pr.Problem)
+            .HasForeignKey(pr => pr.ProblemId)
+            .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<Problem>().HasData(
         new Problem
@@ -60,21 +73,21 @@ public class AppDbContext : DbContext
         new Solution
         {
             Id = 1,
-            ProblemId = 1,  
+            Problem_Name = "Find the sum of two numbers",  
             Language = "Python",
             SolutionCode = "def sum(a, b): return a + b"
         },
         new Solution
         {
             Id = 2,
-            ProblemId = 1,
+            Problem_Name = "Find the sum of two numbers",  
             Language = "C++",
             SolutionCode = "int sum(int a, int b) { return a + b; }"
         },
         new Solution
         {
             Id = 3,
-            ProblemId = 2,  
+            Problem_Name = "Implement Binary Search",  
             Language = "Java",
             SolutionCode = "int binarySearch(int[] arr, int x) { /* code */ }"
            

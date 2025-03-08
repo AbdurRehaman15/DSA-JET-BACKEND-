@@ -1,34 +1,67 @@
 using System;
 using System.Security.Cryptography;
+using System.Text;
+using Isopoh.Cryptography.Argon2;
 
-namespace DsaJet.Api.Helpers;
-
-public class PasswordHasher
+namespace DsaJet.Api.Helpers
 {
-    private const int SaltSize = 16;
-    private const int KeySize = 32;
-    private const int Iterations = 1000;
+    public class PasswordHasher
+    {
+        private const int SaltSize = 16;  // Recommended salt size
 
-    public static string HashPassword(string password) {
-        byte[] salt = RandomNumberGenerator.GetBytes(SaltSize);
+        public static string HashPassword(string password)
+        {
+            // Generate a secure random salt
+            byte[] salt = RandomNumberGenerator.GetBytes(SaltSize);
+            string saltBase64 = Convert.ToBase64String(salt);
 
-        using var pbkdf2 = new Rfc2898DeriveBytes(password, salt, Iterations, HashAlgorithmName.SHA512);
+            // Hash the password using Argon2id
+            var config = new Argon2Config
+            {
+                Type = Argon2Type.DataIndependentAddressing, // Argon2id
+                Version = Argon2Version.Nineteen,
+                TimeCost = 10,       // Number of iterations
+                MemoryCost = 65536, // 64MB memory usage
+                Lanes = 5,          // Number of parallel threads
+                Threads = Environment.ProcessorCount,
+                HashLength = 32,    // Output hash length
+                Salt = salt,        // Pass salt properly
+                Password = Encoding.UTF8.GetBytes(password) // Convert password to bytes
+            };
 
-        byte[] hash = pbkdf2.GetBytes(KeySize);
+           string hash = Argon2.Hash(config);
 
-        return Convert.ToBase64String(salt) + ":" + Convert.ToBase64String(hash);
-    } 
+            return $"{saltBase64}:{hash}";  // Store salt and hash separately
+        }
 
-    public static bool VerifyPassword(string password, string storedHash){
-        var parts = storedHash.Split(":");
+        public static bool VerifyPassword(string password, string storedHash)
+        {
+            var parts = storedHash.Split(":");
+            if (parts.Length != 2) return false;
 
-        byte[] salt = Convert.FromBase64String(parts[0]);
-        byte[] storedHashBytes = Convert.FromBase64String(parts[1]);
+            byte[] salt = Convert.FromBase64String(parts[0]);
+            string storedHashValue = parts[1];
 
+            // Configure Argon2id for verification
+            var config = new Argon2Config
+            {
+                Type = Argon2Type.DataIndependentAddressing, // Argon2id
+                Version = Argon2Version.Nineteen,
+                TimeCost = 10,
+                MemoryCost = 65536,
+                Lanes = 5,
+                Threads = Environment.ProcessorCount,
+                HashLength = 32,
+                Salt = salt,
+                Password = Encoding.UTF8.GetBytes(password)
+            };
 
-        using var pbkdf2 = new Rfc2898DeriveBytes(password, salt, Iterations, HashAlgorithmName.SHA512);
-        byte[] computedHash = pbkdf2.GetBytes(KeySize);
+            string computedHash = Argon2.Hash(config);
 
-        return CryptographicOperations.FixedTimeEquals(computedHash, storedHashBytes);
+            return CryptographicOperations.FixedTimeEquals(
+              Convert.FromBase64String(storedHashValue), 
+              Convert.FromBase64String(computedHash)
+            );
+        }
     }
 }
