@@ -36,17 +36,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 builder.Services.AddAuthorization();
 
-builder.Services.AddDistributedMemoryCache();
-builder.Services.AddSession(options =>
-{
-    options.IdleTimeout = TimeSpan.FromMinutes(30); // Session timeout
-    options.Cookie.HttpOnly = true;  // Secure cookie access
-    options.Cookie.IsEssential = true;  // Always store session cookie
-});
-
 var app = builder.Build();
 
-app.UseSession();
 app.UseAuthentication();
 app.UseAuthorization();
 
@@ -65,7 +56,7 @@ app.MapGet("/getAllProblems", async (AppDbContext db) =>
         .ToListAsync();
 
     return Results.Ok(problems);
-});
+}).RequireAuthorization();;
 
 app.MapGet("/getProblemsByTag/{tag}", async (AppDbContext db, string tag) => {
     var problems = await db.Problems
@@ -81,7 +72,7 @@ app.MapGet("/getProblemsByTag/{tag}", async (AppDbContext db, string tag) => {
                    }).ToListAsync();
 
     return Results.Ok(problems);
-});
+}).RequireAuthorization();;
 
 app.MapGet("getProblemByName/{Name}", async (AppDbContext db, string Name) => {
     
@@ -97,7 +88,7 @@ app.MapGet("getProblemByName/{Name}", async (AppDbContext db, string Name) => {
 
     return problem.Count == 0? Results.NotFound(new {message = "No problem with that name exists"}) : Results.Ok(problem);
  
-});
+}).RequireAuthorization();;
 
 app.MapGet("/getProblemSolution/{Name}/{Language}", async (AppDbContext db, string Name, string Language) => {
     var solution = await db.Solutions.Where(s => s.Problem_Name == Name && s.Language == Language).Select(s => s.SolutionCode).FirstOrDefaultAsync();;
@@ -107,7 +98,7 @@ app.MapGet("/getProblemSolution/{Name}/{Language}", async (AppDbContext db, stri
     }
 
     return Results.Ok(new {Solution = solution});
-});
+}).RequireAuthorization();;
 
 
 app.MapGet("/users/{id}", async (AppDbContext db, int id) =>
@@ -123,7 +114,7 @@ app.MapGet("getAllUsers", async (AppDbContext db) => {
     }).ToListAsync();
 
     return Results.Ok(users);
-});
+}).RequireAuthorization();;
 
 app.MapPost("/register", async (AppDbContext db, UserRegisterDto userDto) => {
     if(await db.Users.AnyAsync(u => u.Email == userDto.Email)){
@@ -146,7 +137,7 @@ app.MapPost("/register", async (AppDbContext db, UserRegisterDto userDto) => {
 
 });
 
-app.MapPost("/login", async (LoginDto request, AppDbContext db, IConfiguration config, HttpContext context) => {
+app.MapPost("/login", async (LoginDto request, AppDbContext db, IConfiguration config) => {
     var user = await db.Users.FirstOrDefaultAsync(u => u.Username == request.Username);
 
     if(user == null){
@@ -157,9 +148,6 @@ app.MapPost("/login", async (LoginDto request, AppDbContext db, IConfiguration c
         return Results.Unauthorized();
     }
 
-    context.Session.SetString("UseID", user.Id.ToString());
-    context.Session.SetString("Username", user.Username);
-
     var token = JwtTokenHelper.GenerateToken(user.Username, config);
 
     return Results.Ok(new { Message = "User logged in succesfully",Token = token});
@@ -167,23 +155,23 @@ app.MapPost("/login", async (LoginDto request, AppDbContext db, IConfiguration c
 
 
 
-app.MapGet("getUserProfile",  (HttpContext context) => {
-    var username = context.Session.GetString("Username");
+app.MapGet("getUserProfile", (HttpContext context) => {
+    var user = context.User; // Extract the user from JWT token
 
-    if(string.IsNullOrEmpty(username)) 
-        return Results.Json(new { error = "Session expired or not logged in." }, statusCode: 401);
+    if (user.Identity is not { IsAuthenticated: true })
+    {
+        return Results.Json(new { error = "Unauthorized: Invalid or missing token." }, statusCode: 401);
+    }
 
-     
-    return Results.Ok(new { Username = username, Message = "User is authenticated via session." });
+    var username = user.Identity.Name;
 
-});
+    return Results.Ok(new { Username = username, Message = "User is authenticated via JWT." });
+}).RequireAuthorization();
 
 
-app.MapPost("logout", async (HttpContext context) => {
-    context.Session.Clear();
-
+app.MapPost("logout", (HttpContext context) => {
     return Results.Ok(new {Message = "User logged out succesfully"});
-});
+}).RequireAuthorization();
 
 
 app.Run();

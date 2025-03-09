@@ -29,7 +29,7 @@ namespace DsaJet.Api.Helpers
                 Password = Encoding.UTF8.GetBytes(password) // Convert password to bytes
             };
 
-           string hash = Argon2.Hash(config);
+            string hash = Argon2.Hash(config);
 
             return $"{saltBase64}:{hash}";  // Store salt and hash separately
         }

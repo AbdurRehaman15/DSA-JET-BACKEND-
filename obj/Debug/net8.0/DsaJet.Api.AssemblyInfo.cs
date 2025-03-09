@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("DsaJet.Api")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+87609c3e40373004ca98781b808e8b36649c9d30")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7ba9fbc9e7a0e973e895b71ce3aada47f52340fa")]
 [assembly: System.Reflection.AssemblyProductAttribute("DsaJet.Api")]
 [assembly: System.Reflection.AssemblyTitleAttribute("DsaJet.Api")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
