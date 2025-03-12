@@ -1,5 +1,5 @@
 http://localhost:5250/getAllProblems
-
+Authorize: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJqb2huZG9lIiwianRpIjoiY2I1MTljNGEtM2RjOS00ODRmLThiN2MtNTZlNmVmNjA0MjI2IiwiZXhwIjoxNzQxNzEyNTgwLCJpc3MiOiJZb3VySXNzdWVyIiwiYXVkIjoiWW91ckF1ZGllbmNlIn0.3wth1td_l9PNTzuTtA8Z6Kmo0WE7a0CzbLirSL_morA
 ###
 http://localhost:5250/getProblemsByTag/Search
 
@@ -11,9 +11,9 @@ POST http://localhost:5250/register
 Content-Type: application/json
 
 {
-  "Username": "johndoe 2",
-  "Email": "johndoe2@example.com",
-  "Password": "examplepasfgrfs"
+  "Username": "johndoe",
+  "Email": "johndoe@example.com",
+  "Password": "examplepass"
 }
 
 ###

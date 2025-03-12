@@ -29,7 +29,7 @@ namespace DsaJet.Api.Helpers
                 Password = Encoding.UTF8.GetBytes(password) // Convert password to bytes
             };
 
-            string hash = Argon2.Hash(config);
+            string hash = Convert.ToBase64String(Encoding.UTF8.GetBytes(Argon2.Hash(config)));
 
             return $"{saltBase64}:{hash}";  // Store salt and hash separately
         }
@@ -56,7 +56,7 @@ namespace DsaJet.Api.Helpers
                 Password = Encoding.UTF8.GetBytes(password)
             };
 
-            string computedHash = Argon2.Hash(config);
+            string computedHash = Convert.ToBase64String(Encoding.UTF8.GetBytes(Argon2.Hash(config)));
 
             return CryptographicOperations.FixedTimeEquals(
               Convert.FromBase64String(storedHashValue), 

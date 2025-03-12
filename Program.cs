@@ -1,12 +1,8 @@
 using DsaJet.Api.Data;
-using DsaJet.Api.Dto;
-using DsaJet.Api.Entities;
-using DsaJet.Api.Helpers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using Microsoft.AspNetCore.Authorization;
 using DsaJet.Api.Services;
 
 
